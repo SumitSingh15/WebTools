@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Generator - Creative Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .color-swatch { height: 250px; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; }
+        .color-swatch:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
+        button:focus { outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4); }
+    </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M12 22a7 7 0 0 0 7-7h-2a5 5 0 0 1-5 5v2z"/><path d="M15.121 15.121a2 2 0 0 1 2.829 0L21.07 18.2a2 2 0 0 1 0 2.828l-2.121 2.121a2 2 0 0 1-2.829 0z"/><path d="M22 12a7 7 0 0 0-7-7V3a9 9 0 0 1 9 9h-2z"/><path d="M8.879 8.879a2 2 0 0 1 0-2.829L11.021 3.93a2 2 0 0 1 2.828 0l2.121 2.121a2 2 0 0 1 0 2.829z"/><path d="M2 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H2z"/><path d="M4.929 19.071a2 2 0 0 1-2.829 0L-1.07 16.95a2 2 0 0 1 0-2.828l2.121-2.121a2 2 0 0 1 2.829 0z"/></svg>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Color Palette Generator</h1>
+                </div>
+                <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div class="flex flex-col sm:flex-row items-center gap-4 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600 mb-8">
+                <label for="color-count" class="font-medium text-gray-700 dark:text-gray-300">Number of Colors:</label>
+                <input type="number" id="color-count" value="5" min="2" max="10" class="w-24 text-center p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 dark:placeholder-gray-400">
+                <button id="generate-btn" class="w-full sm:w-auto bg-indigo-600 text-white font-semibold py-2 px-5 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200">Generate Palette</button>
+            </div>
+            <div id="palette-display" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"></div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+            const updateThemeIcons = () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    themeToggleLightIcon.classList.remove('hidden');
+                    themeToggleDarkIcon.classList.add('hidden');
+                } else {
+                    themeToggleDarkIcon.classList.remove('hidden');
+                    themeToggleLightIcon.classList.add('hidden');
+                }
+            };
+            updateThemeIcons();
+
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                updateThemeIcons();
+            });
+
+            const generateBtn = document.getElementById('generate-btn');
+            const colorCountInput = document.getElementById('color-count');
+            const paletteDisplay = document.getElementById('palette-display');
+
+            const generatePalette = () => {
+                const count = parseInt(colorCountInput.value, 10);
+                paletteDisplay.innerHTML = '';
+                const startHue = Math.floor(Math.random() * 360);
+                const saturation = 70 + Math.random() * 10;
+                const lightness = 60 + Math.random() * 10;
+                const hueStep = 360 / count;
+                for (let i = 0; i < count; i++) {
+                    const hue = (startHue + i * hueStep) % 360;
+                    const hexColor = hslToHex(hue, saturation, lightness);
+                    paletteDisplay.appendChild(createSwatchElement(hexColor));
+                }
+            };
+
+            const createSwatchElement = (hexColor) => {
+                const swatch = document.createElement('div');
+                swatch.className = 'color-swatch rounded-xl flex flex-col justify-end p-4 cursor-pointer';
+                swatch.style.backgroundColor = hexColor;
+                const hexCodeDisplay = document.createElement('div');
+                hexCodeDisplay.className = 'hex-code-display bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-800 dark:text-gray-200 font-mono font-semibold text-center py-2 px-3 rounded-full shadow-md';
+                hexCodeDisplay.textContent = hexColor;
+                swatch.appendChild(hexCodeDisplay);
+                swatch.addEventListener('click', () => copyToClipboard(hexColor, hexCodeDisplay));
+                return swatch;
+            };
+
+            const copyToClipboard = (textToCopy, displayElement) => {
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy;
+                textArea.style.position = 'fixed';
+                textArea.style.top = '-9999px';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    const originalText = displayElement.textContent;
+                    displayElement.textContent = 'Copied!';
+                    displayElement.classList.add('bg-green-200', 'text-green-800', 'dark:bg-green-700', 'dark:text-white');
+                    setTimeout(() => {
+                        displayElement.textContent = originalText;
+                        displayElement.className = 'hex-code-display bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-800 dark:text-gray-200 font-mono font-semibold text-center py-2 px-3 rounded-full shadow-md';
+                    }, 1500);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                }
+                document.body.removeChild(textArea);
+            };
+
+            function hslToHex(h, s, l) {
+                s /= 100; l /= 100;
+                const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2;
+                let r = 0, g = 0, b = 0;
+                if (0 <= h && h < 60) { [r, g, b] = [c, x, 0]; } else if (60 <= h && h < 120) { [r, g, b] = [x, c, 0]; } else if (120 <= h && h < 180) { [r, g, b] = [0, c, x]; } else if (180 <= h && h < 240) { [r, g, b] = [0, x, c]; } else if (240 <= h && h < 300) { [r, g, b] = [x, 0, c]; } else if (300 <= h && h < 360) { [r, g, b] = [c, 0, x]; }
+                const toHex = (c) => ('0' + Math.round((c + m) * 255).toString(16)).slice(-2);
+                return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+            }
+
+            generateBtn.addEventListener('click', generatePalette);
+            colorCountInput.addEventListener('keydown', (e) => e.key === 'Enter' && generatePalette());
+            generatePalette();
+        });
+    </script>
+</body>
+</html>
