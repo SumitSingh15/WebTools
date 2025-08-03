@@ -3,45 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebApp Tools</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <title>Creative Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex flex-col items-center justify-center p-6">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Creative Toolkit</h1>
+            <p class="mt-4 text-lg text-gray-600">A collection of simple and powerful web utilities.</p>
+        </div>
 
-    <header>
-        <h1>My Web Tools 🛠️</h1>
-        <nav>
-            <a href="#color-tool" class="active">Color Gamut</a>
-            <a href="#tool-2">Tool 2 (Future)</a>
-            <a href="#tool-3">Tool 3 (Future)</a>
-        </nav>
-    </header>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
+            <!-- Color Tool Card -->
+            <a href="color-tool.html" target="_blank" class="block p-8 bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <h2 class="text-2xl font-bold text-gray-900">🎨 Color Palette Generator</h2>
+                <p class="mt-2 text-gray-600">Generate harmonious color palettes for your projects. Click any hex code to copy it instantly.</p>
+            </a>
 
-    <main>
-        <section id="introduction">
-            <h2>Welcome!</h2>
-            <p>This is a collection of simple and useful web tools. Select a tool from the menu above to get started. The first tool helps you generate beautiful color palettes for your design projects.</p>
-        </section>
-
-        <hr>
-
-        <section id="color-tool-container">
-            <div class="tool-header">
-                <h2>🎨 Color Gamut Tool</h2>
-                <p>Pick a number of colors, and we'll generate a harmonious palette. Click any color's hex code to copy it to your clipboard.</p>
-            </div>
-
-            <div class="controls">
-                <label for="color-count">How many colors?</label>
-                <input type="number" id="color-count" value="5" min="2" max="12">
-                <button id="generate-btn">Generate</button>
-            </div>
-
-            <div id="palette-display">
-                </div>
-        </section>
-    </main>
-
+            <!-- Translator Tool Card -->
+            <a href="translator.html" target="_blank" class="block p-8 bg-white rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                <h2 class="text-2xl font-bold text-gray-900">🌐 Sentence Translator</h2>
+                <p class="mt-2 text-gray-600">Get AI-powered translations, then copy them or export as a JSON file. Your choices are saved automatically.</p>
+            </a>
+        </div>
+    </div>
 </body>
 </html>
