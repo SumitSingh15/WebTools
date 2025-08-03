@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Translator - Creative Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        button:focus { outline: none; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.4); }
+    </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200">
+
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-600"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Sentence Translator</h1>
+                </div>
+                <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-sm p-2.5">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm-.707 10.607a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+            <div class="space-y-6">
+                <div>
+                    <label for="sentence-input" class="block font-medium text-gray-700 dark:text-gray-300">Enter your sentence (in English):</label>
+                    <textarea id="sentence-input" rows="3" class="mt-2 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 dark:placeholder-gray-400" placeholder="e.g., The quick brown fox jumps over the lazy dog."></textarea>
+                </div>
+                <div>
+                    <label class="font-medium text-gray-700 dark:text-gray-300">Choose languages:</label>
+                    <div id="language-options" class="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="translate-btn" class="w-full sm:w-auto bg-indigo-600 text-white font-semibold py-2 px-5 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 disabled:bg-indigo-400 disabled:cursor-not-allowed flex items-center justify-center">Translate</button>
+                    <button id="export-btn" style="display: none;" class="w-full sm:w-auto bg-gray-600 text-white font-semibold py-2 px-5 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200 flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Export as JSON
+                    </button>
+                </div>
+            </div>
+            <div id="translation-results" class="mt-8 space-y-4"></div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+            const updateThemeIcons = () => {
+                if (document.documentElement.classList.contains('dark')) {
+                    themeToggleLightIcon.classList.remove('hidden');
+                    themeToggleDarkIcon.classList.add('hidden');
+                } else {
+                    themeToggleDarkIcon.classList.remove('hidden');
+                    themeToggleLightIcon.classList.add('hidden');
+                }
+            };
+            updateThemeIcons();
+
+            themeToggleBtn.addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                updateThemeIcons();
+            });
+
+            const sentenceInput = document.getElementById('sentence-input');
+            const languageOptions = document.getElementById('language-options');
+            const translateBtn = document.getElementById('translate-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const translationResults = document.getElementById('translation-results');
+            
+            let currentTranslations = {};
+            
+            const availableLanguages = ["French", "German", "Spanish", "Brazilian Portuguese", "Russian", "Japanese", "Simplified Chinese", "Traditional Chinese", "Korean", "Italian", "Arabic", "Polish", "Turkish", "Thai", "Indonesian", "Ukrainian"];
+            
+            const saveSelectedLanguages = () => {
+                const selectedLanguages = Array.from(document.querySelectorAll('input[name="language"]:checked')).map(cb => cb.value);
+                localStorage.setItem('savedLanguages', JSON.stringify(selectedLanguages));
+            };
+
+            const loadAndApplySavedLanguages = () => {
+                const savedLanguages = JSON.parse(localStorage.getItem('savedLanguages'));
+                if (savedLanguages && Array.isArray(savedLanguages)) {
+                    savedLanguages.forEach(lang => {
+                        const checkbox = document.getElementById(`lang-${lang.toLowerCase().replace(/[^a-z0-9]/g, '')}`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+            };
+
+            availableLanguages.forEach(lang => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = `lang-${lang.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+                checkbox.name = 'language';
+                checkbox.value = lang;
+                checkbox.className = 'h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 rounded focus:ring-indigo-500 bg-gray-100 dark:bg-gray-600';
+                checkbox.addEventListener('change', saveSelectedLanguages);
+                const label = document.createElement('label');
+                label.htmlFor = `lang-${lang.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+                label.textContent = lang;
+                label.className = 'ml-2 block text-sm text-gray-900 dark:text-gray-300 cursor-pointer';
+                div.appendChild(checkbox);
+                div.appendChild(label);
+                languageOptions.appendChild(div);
+            });
+
+            loadAndApplySavedLanguages();
+
+            const copyToClipboard = (textToCopy, displayElement) => {
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy;
+                textArea.style.position = 'fixed';
+                textArea.style.top = '-9999px';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    const originalHTML = displayElement.innerHTML;
+                    displayElement.innerHTML = `<span class="text-green-600 dark:text-green-400 font-bold">Copied!</span>`;
+                    displayElement.classList.add('bg-green-100', 'dark:bg-green-900/50');
+                    setTimeout(() => {
+                        displayElement.innerHTML = originalHTML;
+                        displayElement.classList.remove('bg-green-100', 'dark:bg-green-900/50');
+                    }, 1500);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                }
+                document.body.removeChild(textArea);
+            };
+
+            const translateSentence = async () => {
+                const sentence = sentenceInput.value.trim();
+                const selectedLanguages = Array.from(document.querySelectorAll('input[name="language"]:checked')).map(cb => cb.value);
+                translationResults.innerHTML = '';
+                exportBtn.style.display = 'none';
+                currentTranslations = {};
+
+                if (!sentence) {
+                    translationResults.innerHTML = `<p class="text-red-500 font-medium">Please enter a sentence.</p>`;
+                    return;
+                }
+                if (selectedLanguages.length === 0) {
+                    translationResults.innerHTML = `<p class="text-red-500 font-medium">Please select at least one language.</p>`;
+                    return;
+                }
+
+                translateBtn.disabled = true;
+                translateBtn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Translating...`;
+                
+                const prompt = `Translate the following English sentence into the specified languages. Provide the output as a single JSON object where each key is the language name and the value is the translated sentence.
+                Sentence: "${sentence}"
+                Languages: ${selectedLanguages.join(', ')}`;
+
+                const payload = {
+                  contents: [{ role: "user", parts: [{ text: prompt }] }],
+                  generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                      type: "OBJECT",
+                      properties: selectedLanguages.reduce((acc, lang) => {
+                          acc[lang] = { type: "STRING" };
+                          return acc;
+                      }, {}),
+                    }
+                  }
+                };
+
+                try {
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                    
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`API error: ${response.statusText}`);
+
+                    const result = await response.json();
+                    const text = result.candidates[0].content.parts[0].text;
+                    const translations = JSON.parse(text);
+                    
+                    currentTranslations = { source_sentence: sentence, translations: translations };
+
+                    selectedLanguages.forEach(lang => {
+                        const translation = translations[lang];
+                        if (translation) {
+                            const resultEl = document.createElement('div');
+                            resultEl.className = 'bg-gray-100 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600 transition-all duration-300 ease-in-out transform hover:scale-105 cursor-pointer';
+                            resultEl.innerHTML = `<p class="text-sm font-medium text-gray-500 dark:text-gray-400">${lang}</p><p class="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-1">${translation}</p>`;
+                            resultEl.addEventListener('click', () => copyToClipboard(translation, resultEl));
+                            translationResults.appendChild(resultEl);
+                        }
+                    });
+
+                    if (Object.keys(translations).length > 0) {
+                        exportBtn.style.display = 'inline-flex';
+                    }
+
+                } catch (error) {
+                    console.error("Translation failed:", error);
+                    translationResults.innerHTML = `<p class="text-red-500 font-medium">Translation failed. Please try again later.</p>`;
+                } finally {
+                    translateBtn.disabled = false;
+                    translateBtn.innerHTML = 'Translate';
+                }
+            };
+
+            const exportTranslationsAsJson = () => {
+                if (Object.keys(currentTranslations).length === 0) return;
+
+                const jsonString = JSON.stringify(currentTranslations, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'translations.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            translateBtn.addEventListener('click', translateSentence);
+            exportBtn.addEventListener('click', exportTranslationsAsJson);
+        });
+    </script>
+</body>
+</html>
